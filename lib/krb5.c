@@ -441,9 +441,16 @@ static int ftp_send_command(struct Curl_easy *data, const char *message, ...)
   va_list args;
   char print_buffer[50];
 
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat-nonliteral"
+#endif
   va_start(args, message);
   mvsnprintf(print_buffer, sizeof(print_buffer), message, args);
   va_end(args);
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
 
   if(ftpsend(data, data->conn, print_buffer)) {
     ftp_code = -1;
